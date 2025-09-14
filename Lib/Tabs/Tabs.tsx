@@ -1,14 +1,13 @@
-import React, {
+import {
   useState,
   useEffect,
   useRef,
   type MouseEventHandler,
   useCallback,
-  type ReactElement,
 } from "react";
 import { TabPage } from "./TabPage";
 import { extractElements } from "../Functions";
-import type { TabsProps, TabPageProps, TabAddPageProps } from "../Types";
+import type { TabsProps, TabPageProps, TabAddPageProps, Element, Elements } from "../Types";
 // @ts-expect-error : Archivo CSS
 import styles from "../index.module.css";
 import { TabAddPage } from "./TabAddPage";
@@ -41,7 +40,7 @@ const CaptionButton = ({
 }: {
   index: number;
   selectedPageIndex: number;
-  page: ReactElement<TabPageProps>;
+  page: Element<TabPageProps>;
   onOpen: (num: number) => void;
   onClose: (num: number) => void;
 }) => {
@@ -83,10 +82,10 @@ const TabHeader = ({
   onAddPage,
   onClose,
 }: {
-  pages: ReactElement<TabPageProps>[];
+  pages: Elements<TabPageProps>;
   onOpen: (num: number) => void;
   selectedPageIndex: number;
-  addPage: ReactElement<TabAddPageProps> | null;
+  addPage: Element<TabAddPageProps> | null;
   onAddPage: () => void;
   onClose: (num: number) => void;
 }) => {
@@ -121,7 +120,7 @@ const TabHeader = ({
   );
 };
 
-function createNewPage(AddPage: ReactElement<TabAddPageProps> | null) {
+function createNewPage(AddPage: Element<TabAddPageProps> | null) {
   if (AddPage === null) return null;
 
   const newPage = <TabPage {...AddPage.props} />;
@@ -130,19 +129,17 @@ function createNewPage(AddPage: ReactElement<TabAddPageProps> | null) {
 }
 
 export function Tabs({ children }: TabsProps) {
-  const [pages, setPages] = useState<React.ReactElement<TabPageProps>[]>(() =>
+  const [pages, setPages] = useState<Elements<TabPageProps>>(() =>
     extractElements<TabPageProps>(children, TabPage)
   );
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
-  const [addPage, setAddPage] = useState<ReactElement<TabAddPageProps> | null>(
-    null
-  );
+  const [addPage, setAddPage] = useState<Element<TabAddPageProps> | null>(null);
   //#region  flechas scroll
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
   const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const cahePageRef = useRef<ReactElement<TabPageProps>[]>([]);
+  const cahePageRef = useRef<Elements<TabPageProps>>([]);
   const checkArrows = useCallback(() => {
     const container = tabsContainerRef.current;
     if (!container) return;
@@ -179,7 +176,7 @@ export function Tabs({ children }: TabsProps) {
   //#endregion
 
   useEffect(() => {
-    const addingPage: ReactElement<TabAddPageProps> =
+    const addingPage: Element<TabAddPageProps> =
       extractElements<TabAddPageProps>(children, TabAddPage)?.[0];
     setAddPage(addingPage ?? null);
   }, [children]);

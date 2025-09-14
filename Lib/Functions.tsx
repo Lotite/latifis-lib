@@ -1,17 +1,26 @@
-import React from 'react';
-import type { Style } from './Types';
+import  { Children as R_Children, isValidElement, type ComponentType, type ReactElement } from 'react';
+import type { Children, Elements, List, Style } from './Types';
 
 
 
-export const extractElements = <T extends object>(
-  children: React.ReactNode,
-  componentType: React.ComponentType<T>
-): React.ReactElement<T>[] => {
-  return React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<T> =>
-      React.isValidElement(child) && typeof child.type === 'function' && child.type === componentType
+export function extractElements<T>(
+  children: Children,
+  componentType: ComponentType<T>
+): Elements<T>{
+  return R_Children.toArray(children).filter(
+    (child): child is ReactElement<T> =>
+      isValidElement(child) &&
+      typeof child.type === "function" &&
+      child.type === componentType
   );
 };
+
+export function extractPropsElements <T>(
+  children: Children,
+  componentType: ComponentType<T>
+): List<T> {
+    return extractElements(children,componentType).map(element => element.props);
+}
 
 
 export const createStyle = (
