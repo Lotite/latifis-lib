@@ -11,7 +11,7 @@ export type OnClickHandler = (e: React.MouseEvent<HTMLElement>) => void;
 export type Element<T> = ReactElement<T>;
 export type Elements<T> = ReactElement<T>[];
 
-// Tipo para los hijos de Grid, que ahora acepta un segundo genérico para el tipo del padre.
+
 export type ChildrenElements<T> = Element<T> | Elements<T>;
 
 export type List<T> = T[];
@@ -41,13 +41,24 @@ export type Caption = BasicStyleProps & {
 // #endregion
 
 // #region Grid Props
-export type GridProps<T extends object> = {
+export type GridProps<T extends object> = BasicStyleProps & {
   children: ChildrenElements<T>;
   DataList: List<T>;
+
+  THeadStyle?: Style;
+  THeadClassName?: ClassName;
+  THeadDisableStyles?: boolean;
+
+  CaptionStyle?: Style;
+  CaptionClassName?: ClassName;
+  CaptionDisableStyles?: boolean;
+
+  TBodyStyle?: Style;
+  TBodyClassName?: ClassName;
+  TBodyDisableStyles?: boolean;
 };
 
-// GridColumnProps ahora acepta el tipo del objeto padre (T) y el tipo de la clave (K).
-// Esto asegura que la propiedad dataField sea una clave válida.
+
 export type GridColumnProps<T extends object> = {
   // Captions props
   CaptionTitle: Title;
@@ -60,6 +71,7 @@ export type GridColumnProps<T extends object> = {
   CellStyle?: Style;
   CellClassName?: ClassName;
 
+
   // DataProps
   dataField: keyof T;
 };
@@ -71,7 +83,7 @@ export type GridCaption = Pick<
 
 export type GridRow<T extends object> = T;
 
-export type GridCell<T> = {
+export type GridCell<T> = BasicStyleProps & {
   content: T;
 };
 // #endregion

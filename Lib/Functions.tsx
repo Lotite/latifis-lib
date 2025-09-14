@@ -1,5 +1,5 @@
 import  { Children as R_Children, isValidElement, type ComponentType, type ReactElement } from 'react';
-import type { Children, Elements, List, Style } from './Types';
+import type { Children, ClassName, Elements, List, Style } from './Types';
 
 
 
@@ -34,17 +34,14 @@ export const createStyle = (
   return style;
 };
 
-export const unicId = () => {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
-}
 
 
 export const createClassName = (
-  classNameDefault: string,
-  className: string | undefined,
-  disableStyles: boolean | undefined
+  classNameDefault?: ClassName,
+  className?: ClassName,
+  disableStyles?: boolean
 ) => {
-  if (disableStyles !==true) {
+  if (disableStyles !== true) {
     return `${className} ${classNameDefault}`;
   }
   return className;

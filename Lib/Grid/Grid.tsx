@@ -1,13 +1,28 @@
 import { useCallback, useEffect, useState } from "react";
-import type { GridCaption, GridCell, GridColumnProps, GridProps, List } from "../Types";
+import type {
+  BasicStyleProps,
+  GridCaption,
+  GridCell,
+  GridColumnProps,
+  GridProps,
+  List,
+} from "../Types";
 import { GridColumn } from "./GridColumn";
-import { extractPropsElements } from "../Functions"; // Asegúrate de que esta función exista
+import { createClassName, extractPropsElements } from "../Functions"; 
 
-
-function THead({ captions }: { captions: List<GridCaption> }) {
+function THead({
+  captions,
+  style,
+  className,
+  disableStyles,
+}: { captions: List<GridCaption> } & BasicStyleProps) {
+  const classNameDefault = "bg-gray-100  border-b-[0.1px] border-b-[#0003] shrink-0";
   return (
-    <thead className="bg-gray-100">
-      <tr>
+    <thead
+      className={createClassName(classNameDefault, className, disableStyles)}
+      style={style}
+    >
+      <tr className="flex">
         {captions.map((caption, index) => (
           <Caption key={index} {...caption} />
         ))}
@@ -16,12 +31,19 @@ function THead({ captions }: { captions: List<GridCaption> }) {
   );
 }
 
-function Caption({ title, className, style, icon }: GridCaption) {
-  const finalClassName = `px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 ${
-    className || ""
-  }`;
+function Caption({
+  title,
+  className,
+  style,
+  icon,
+  disableStyles,
+}: GridCaption) {
+  const classNameDefault = `px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500 flex-1`;
   return (
-    <th className={finalClassName} style={style}>
+    <th
+      className={createClassName(classNameDefault, className, disableStyles)}
+      style={style}
+    >
       {icon} {title}
     </th>
   );
@@ -30,12 +52,16 @@ function Caption({ title, className, style, icon }: GridCaption) {
 function TBody<T extends object>({
   rows,
   columns,
-}: {
+  className,
+  style,
+  disableStyles
+}: BasicStyleProps & {
   rows: List<T>;
   columns: List<GridColumnProps<T>>;
 }) {
+  const classNameDefault = "divide-y  divide-gray-200 bg-white overflow-y-auto block grow";
   return (
-    <tbody className="divide-y divide-gray-200 bg-white">
+    <tbody style={style} className={createClassName(classNameDefault,className,disableStyles)}>
       {rows.map((row, index) => (
         <Row key={index} data={row} columns={columns} />
       ))}
@@ -50,7 +76,7 @@ function Row<T extends object>({
   data: T;
   columns: List<GridColumnProps<T>>;
 }) {
-  const rowClassName = `transition duration-150 ease-in-out hover:bg-gray-50`;
+  const rowClassName = `transition duration-150 ease-in-out hover:bg-gray-50 flex`;
   return (
     <tr className={rowClassName}>
       {columns.map((col, index) => (
@@ -71,7 +97,7 @@ function Cell<T extends object>({
   className,
   style,
 }: GridCell<T> & { className?: string; style?: object }) {
-  const finalClassName = `px-4 py-4 whitespace-nowrap text-sm text-gray-900 ${
+  const finalClassName = `px-4 py-4 whitespace-nowrap text-sm text-gray-900 flex-1 ${
     className || ""
   }`;
   return (
@@ -81,26 +107,42 @@ function Cell<T extends object>({
   );
 }
 
-export function Grid<T extends object>({ children, DataList }: GridProps<T>) {
+export function Grid<T extends object>({
+  children,
+  DataList,
+
+  className,
+  disableStyles,
+  style,
+
+  CaptionClassName,
+  CaptionDisableStyles,
+  CaptionStyle,
+
+  THeadClassName,
+  THeadDisableStyles,
+  THeadStyle,
+
+  TBodyClassName,
+  TBodyDisableStyles,
+  TBodyStyle,
+}: GridProps<T>) {
   const [columns, setColumns] = useState<List<GridColumnProps<T>>>([]);
   const [captions, setCaptions] = useState<List<GridCaption>>([]);
 
   const getCaptions = useCallback((): List<GridCaption> => {
     return columns.map((col) => ({
       title: col.CaptionTitle,
-      className: col.CaptionClassName,
-      disableStyles: col.CaptionDisableStyles,
+      className: col.CaptionClassName ?? CaptionClassName,
+      disableStyles: col.CaptionDisableStyles ?? CaptionDisableStyles,
       icon: col.CaptionIcon,
       onClick: undefined,
-      style: col.CaptionStyle,
+      style: col.CaptionStyle ?? CaptionStyle,
     }));
-  }, [columns]);
+  }, [CaptionClassName, CaptionDisableStyles, CaptionStyle, columns]);
 
   useEffect(() => {
-    const cols = extractPropsElements<GridColumnProps<T>>(
-      children,
-      GridColumn
-    );
+    const cols = extractPropsElements<GridColumnProps<T>>(children, GridColumn);
     setColumns(cols);
   }, [children]);
 
@@ -108,11 +150,27 @@ export function Grid<T extends object>({ children, DataList }: GridProps<T>) {
     setCaptions(getCaptions());
   }, [columns, getCaptions]);
 
+  const defaultClassName = "h-[500px] w-[95%] border-b mx-auto border-gray-200 shadow sm:rounded-lg flex flex-col";
+
   return (
-    <div className="overflow-hidden border-b border-gray-200 shadow sm:rounded-lg">
-      <table className="min-w-full divide-y divide-gray-200">
-        <THead captions={captions} />
-        <TBody rows={DataList} columns={columns} />
+    <div
+      style={style}
+      className={createClassName(defaultClassName, className, disableStyles)}
+    >
+      <table className="min-w-full h-full flex flex-col">
+        <THead
+          captions={captions}
+          style={THeadStyle}
+          className={THeadClassName}
+          disableStyles={THeadDisableStyles}
+        />
+        <TBody
+          rows={DataList}
+          columns={columns}
+          style={TBodyStyle}
+          className={TBodyClassName}
+          disableStyles={TBodyDisableStyles}
+        />
       </table>
     </div>
   );
