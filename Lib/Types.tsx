@@ -65,7 +65,7 @@ export type GridProps<T extends object> = BasicStyleProps & {
   TBodyDisableStyles?: boolean;
 };
 
-export type GridColumnProps<T extends object> = {
+export type GridColumnProps<T > = {
   // Captions props
   CaptionTitle: Title;
   CaptionStyle?: Style;
