@@ -14,8 +14,7 @@ import { createClassName, extractPageContent, extractPropsElements } from "../Fu
 
 
 
-//TODO: Añadir la capacidad de filtrar ademas de crear una paginacion
-//TODO: Añadir la capacidad de crear una columna con un body personalizado
+//TODO: Añadir la capacidad de filtrar y ordenar, tambien con la opcion de añadir un metodo para realizar esos filtros.
 
 function THead({
   captions,
@@ -174,6 +173,19 @@ export function Grid<T extends object>({
     length: Math.ceil(DataList.length / PageSize),
   });
 
+
+
+  useEffect(() => {
+setPageInfo((oldInfo)=>{
+      return {
+        ...oldInfo,
+        pageSize: PageSize,
+        length: Math.ceil(DataList.length / PageSize),
+      };
+    })
+
+
+  }, [DataList.length, PageSize, children]);
 
 
   useEffect(()=>{
