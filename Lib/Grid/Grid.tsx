@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   BasicStyleProps,
   GridCaption,
@@ -6,9 +7,15 @@ import type {
   GridColumnProps,
   GridProps,
   List,
+  PageInfo,
 } from "../Types";
 import { GridColumn } from "./GridColumn";
-import { createClassName, extractPropsElements } from "../Functions"; 
+import { createClassName, extractPageContent, extractPropsElements } from "../Functions";
+
+
+
+//TODO: Añadir la capacidad de filtrar ademas de crear una paginacion
+//TODO: Añadir la capacidad de crear una columna con un body personalizado
 
 function THead({
   captions,
@@ -59,7 +66,7 @@ function TBody<T extends object>({
   rows: List<T>;
   columns: List<GridColumnProps<T>>;
 }) {
-  const classNameDefault = "divide-y  divide-gray-200 bg-white overflow-y-auto block grow";
+ const classNameDefault = "divide-y flex-1 divide-gray-200 bg-white overflow-y-auto block grow";
   return (
     <tbody style={style} className={createClassName(classNameDefault,className,disableStyles)}>
       {rows.map((row, index) => (
@@ -107,9 +114,31 @@ function Cell<T extends object>({
   );
 }
 
+
+function Footer<T>({ pageInfo, setInfo }: { pageInfo: PageInfo<T>, setInfo: (info: PageInfo<T>) => void }) {
+  return (
+    <tfoot className="flex flex-row">
+      {Array.from({ length: pageInfo.length }).map((_, i) => (
+        <Pagination index={i} onClick={() => setInfo({ ...pageInfo, currentPage: i })} />
+      ))}
+    </tfoot>
+  );
+}
+function Pagination({index,onClick}:{index:number,onClick:()=>void}){
+  return (
+    <button className="mx-5" key={index} onClick={onClick}>
+      {index + 1}
+    </button>
+  );
+}
+
+
+
+
 export function Grid<T extends object>({
   children,
   DataList,
+  PageSize = 15,
 
   className,
   disableStyles,
@@ -129,6 +158,32 @@ export function Grid<T extends object>({
 }: GridProps<T>) {
   const [columns, setColumns] = useState<List<GridColumnProps<T>>>([]);
   const [captions, setCaptions] = useState<List<GridCaption>>([]);
+  const refDivContainer = useRef<HTMLDivElement|null>(null)
+  const [computedMaxHeight, setComputedMaxHeight] = useState<string | null>(null);
+
+  const [pageInfo, setPageInfo] = useState<PageInfo<T>>({
+    conentPage: extractPageContent(DataList,0,PageSize),
+    currentPage: 0,
+    pageSize: PageSize,
+    length: Math.ceil(DataList.length / PageSize),
+  });
+
+
+
+  useEffect(()=>{
+    setPageInfo((oldInfo)=>{
+      return {...oldInfo , conentPage:extractPageContent(DataList,oldInfo.currentPage,oldInfo.pageSize)}
+    })
+  },[DataList, pageInfo.currentPage])
+
+  useEffect(() => {
+    if (refDivContainer.current) {
+      const computedStyle = getComputedStyle(refDivContainer.current);
+      // alert(computedStyle.height);
+      setComputedMaxHeight(computedStyle.maxHeight);
+    }
+  }, [children, refDivContainer,pageInfo]);
+
 
   const getCaptions = useCallback((): List<GridCaption> => {
     return columns.map((col) => ({
@@ -150,27 +205,30 @@ export function Grid<T extends object>({
     setCaptions(getCaptions());
   }, [columns, getCaptions]);
 
-  const defaultClassName = "h-[500px] w-[95%] border-b mx-auto border-gray-200 shadow sm:rounded-lg flex flex-col";
-
+const defaultClassName = "w-[95%] border-b mx-auto  border-gray-200 shadow sm:rounded-lg flex flex-col max-h-[500px]";
   return (
     <div
+      ref={refDivContainer}
       style={style}
       className={createClassName(defaultClassName, className, disableStyles)}
     >
-      <table className="min-w-full h-full flex flex-col">
+      <table
+        className={`min-w-full h-full max-h-[${computedMaxHeight}] flex flex-col`}
+      >
         <THead
           captions={captions}
           style={THeadStyle}
           className={THeadClassName}
           disableStyles={THeadDisableStyles}
         />
-        <TBody
-          rows={DataList}
+        <TBody<T>
+          rows={pageInfo.conentPage}
           columns={columns}
           style={TBodyStyle}
           className={TBodyClassName}
           disableStyles={TBodyDisableStyles}
         />
+        <Footer<T> pageInfo={pageInfo} setInfo={setPageInfo} />
       </table>
     </div>
   );

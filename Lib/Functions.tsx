@@ -22,6 +22,10 @@ export function extractPropsElements <T>(
     return extractElements(children,componentType).map(element => element.props);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function extractPageContent(List:List<any>,currentPage:number,pageSize:number){
+  return List.slice(currentPage,currentPage+pageSize)
+}
 
 export const createStyle = (
   styleDefault: Style,
@@ -42,7 +46,7 @@ export const createClassName = (
   disableStyles?: boolean
 ) => {
   if (disableStyles !== true) {
-    return `${className} ${classNameDefault}`;
+    return `${classNameDefault} ${className}`;
   }
   return className;
 };

@@ -19,6 +19,14 @@ export type ObjectValuesType<T> = T[keyof T];
 // #endregion
 
 // #region basic templates
+export type PageInfo<T> = {
+  currentPage: number;
+  pageSize: number;
+  length:number
+  conentPage: List<T>;
+};
+
+
 export type BasicStyleProps = {
   className?: ClassName;
   style?: Style;
@@ -44,6 +52,7 @@ export type Caption = BasicStyleProps & {
 export type GridProps<T extends object> = BasicStyleProps & {
   children: ChildrenElements<T>;
   DataList: List<T>;
+  PageSize?:number
 
   THeadStyle?: Style;
   THeadClassName?: ClassName;
