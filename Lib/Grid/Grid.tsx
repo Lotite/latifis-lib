@@ -88,30 +88,36 @@ function Row<T extends object>({
     <tr className={rowClassName}>
       {columns.map((col, index) => (
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        <Cell<any>
+        <Cell<T,any>
           key={index}
-          content={data[col.dataField]}
+          content={col.children || data[col.dataField!]}
           className={col.CellClassName}
           style={col.CellStyle}
+          context={data}
         />
       ))}
     </tr>
   );
 }
 
-function Cell<T extends object>({
+function Cell<T extends object,K extends React.ReactNode>({
   content,
   className,
   style,
-}: GridCell<T> & { className?: string; style?: object }) {
+  context
+}: GridCell<T,K> & { className?: string; style?: object }) {
   const finalClassName = `px-4 py-4 whitespace-nowrap text-sm text-gray-900 flex-1 ${
     className || ""
   }`;
-  return (
-    <td className={finalClassName} style={style}>
-      {`${content}`}
-    </td>
-  );
+
+  if (typeof content === "function"){
+    content = content(context)
+  }
+    return (
+      <td className={finalClassName} style={style}>
+        {content}
+      </td>
+    );
 }
 
 

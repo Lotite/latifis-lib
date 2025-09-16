@@ -11,7 +11,6 @@ export type OnClickHandler = (e: React.MouseEvent<HTMLElement>) => void;
 export type Element<T> = ReactElement<T>;
 export type Elements<T> = ReactElement<T>[];
 
-
 export type ChildrenElements<T> = Element<T> | Elements<T>;
 
 export type List<T> = T[];
@@ -22,10 +21,9 @@ export type ObjectValuesType<T> = T[keyof T];
 export type PageInfo<T> = {
   currentPage: number;
   pageSize: number;
-  length:number
+  length: number;
   conentPage: List<T>;
 };
-
 
 export type BasicStyleProps = {
   className?: ClassName;
@@ -52,7 +50,7 @@ export type Caption = BasicStyleProps & {
 export type GridProps<T extends object> = BasicStyleProps & {
   children: ChildrenElements<T>;
   DataList: List<T>;
-  PageSize?:number
+  PageSize?: number;
 
   THeadStyle?: Style;
   THeadClassName?: ClassName;
@@ -67,7 +65,6 @@ export type GridProps<T extends object> = BasicStyleProps & {
   TBodyDisableStyles?: boolean;
 };
 
-
 export type GridColumnProps<T extends object> = {
   // Captions props
   CaptionTitle: Title;
@@ -80,9 +77,13 @@ export type GridColumnProps<T extends object> = {
   CellStyle?: Style;
   CellClassName?: ClassName;
 
+  children?:
+    | Children
+    | ((contex: T) => ObjectValuesType<T>)
+    | ((contex: T) => Children);
 
   // DataProps
-  dataField: keyof T;
+  dataField?: keyof T;
 };
 
 export type GridCaption = Pick<
@@ -92,8 +93,9 @@ export type GridCaption = Pick<
 
 export type GridRow<T extends object> = T;
 
-export type GridCell<T> = BasicStyleProps & {
-  content: T;
+export type GridCell<T, K> = BasicStyleProps & {
+  content: K | ((contex: T) => K);
+  context: T;
 };
 // #endregion
 
