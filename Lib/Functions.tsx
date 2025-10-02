@@ -1,18 +1,31 @@
-import React from 'react';
-import type { Style } from './Types';
+import  { Children as R_Children, isValidElement, type ComponentType, type ReactElement } from 'react';
+import type { Children, ClassName, Elements, List, Style } from './Types';
 
 
 
-export const extractElements = <T extends object>(
-  children: React.ReactNode,
-  componentType: React.ComponentType<T>
-): React.ReactElement<T>[] => {
-  return React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<T> =>
-      React.isValidElement(child) && typeof child.type === 'function' && child.type === componentType
+export function extractElements<T>(
+  children: Children,
+  componentType: ComponentType<T>
+): Elements<T>{
+  return R_Children.toArray(children).filter(
+    (child): child is ReactElement<T> =>
+      isValidElement(child) &&
+      typeof child.type === "function" &&
+      child.type === componentType
   );
 };
 
+export function extractPropsElements <T>(
+  children: Children,
+  componentType: ComponentType<T>
+): List<T> {
+    return extractElements(children,componentType).map(element => element.props);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function extractPageContent(List:List<any>,currentPage:number,pageSize:number){
+  return List.slice(currentPage,currentPage+pageSize)
+}
 
 export const createStyle = (
   styleDefault: Style,
@@ -25,18 +38,15 @@ export const createStyle = (
   return style;
 };
 
-export const unicId = () => {
-  return Math.random().toString(36).substring(2) + Date.now().toString(36);
-}
 
 
 export const createClassName = (
-  classNameDefault: string,
-  className: string | undefined,
-  disableStyles: boolean | undefined
+  classNameDefault?: ClassName,
+  className?: ClassName,
+  disableStyles?: boolean
 ) => {
-  if (disableStyles !==true) {
-    return `${className} ${classNameDefault}`;
+  if (disableStyles !== true) {
+    return `${classNameDefault} ${className}`;
   }
   return className;
 };

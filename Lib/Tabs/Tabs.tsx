@@ -1,14 +1,13 @@
-import React, {
+import {
   useState,
   useEffect,
   useRef,
   type MouseEventHandler,
   useCallback,
-  type ReactElement,
 } from "react";
 import { TabPage } from "./TabPage";
-import { extractElements } from "../Functions";
-import type { TabsProps, TabPageProps, TabAddPageProps } from "../Types";
+import { createClassName, extractElements } from "../Functions";
+import type { TabsProps, TabPageProps, TabAddPageProps, Element, Elements } from "../Types";
 // @ts-expect-error : Archivo CSS
 import styles from "../index.module.css";
 import { TabAddPage } from "./TabAddPage";
@@ -41,7 +40,7 @@ const CaptionButton = ({
 }: {
   index: number;
   selectedPageIndex: number;
-  page: ReactElement<TabPageProps>;
+  page: Element<TabPageProps>;
   onOpen: (num: number) => void;
   onClose: (num: number) => void;
 }) => {
@@ -83,10 +82,10 @@ const TabHeader = ({
   onAddPage,
   onClose,
 }: {
-  pages: ReactElement<TabPageProps>[];
+  pages: Elements<TabPageProps>;
   onOpen: (num: number) => void;
   selectedPageIndex: number;
-  addPage: ReactElement<TabAddPageProps> | null;
+  addPage: Element<TabAddPageProps> | null;
   onAddPage: () => void;
   onClose: (num: number) => void;
 }) => {
@@ -121,7 +120,7 @@ const TabHeader = ({
   );
 };
 
-function createNewPage(AddPage: ReactElement<TabAddPageProps> | null) {
+function createNewPage(AddPage: Element<TabAddPageProps> | null) {
   if (AddPage === null) return null;
 
   const newPage = <TabPage {...AddPage.props} />;
@@ -129,24 +128,20 @@ function createNewPage(AddPage: ReactElement<TabAddPageProps> | null) {
   return newPage;
 }
 
-export function Tabs({ children }: TabsProps) {
-  const [pages, setPages] = useState<React.ReactElement<TabPageProps>[]>(() =>
-    extractElements<TabPageProps>(children, TabPage)
-  );
+export function Tabs({ children , className ,style , disableStyles}: TabsProps) {
+  const [pages, setPages] = useState<Elements<TabPageProps>>([]);
   const [selectedPageIndex, setSelectedPageIndex] = useState(0);
-  const [addPage, setAddPage] = useState<ReactElement<TabAddPageProps> | null>(
-    null
-  );
+  const [addPage, setAddPage] = useState<Element<TabAddPageProps> | null>(null);
   //#region  flechas scroll
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
 
   const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const cahePageRef = useRef<ReactElement<TabPageProps>[]>([]);
+  const cahePageRef = useRef<Elements<TabPageProps>>([]);
+
   const checkArrows = useCallback(() => {
     const container = tabsContainerRef.current;
     if (!container) return;
-
     const hasOverflow = container.scrollWidth > container.clientWidth;
 
     // Mostrar flecha izquierda si hay desbordamiento y no estamos al principio
@@ -179,8 +174,11 @@ export function Tabs({ children }: TabsProps) {
   //#endregion
 
   useEffect(() => {
-    const addingPage: ReactElement<TabAddPageProps> =
-      extractElements<TabAddPageProps>(children, TabAddPage)?.[0];
+
+    const pages = extractElements<TabPageProps>(children, TabPage);
+    setPages([...pages, ...cahePageRef.current]);
+    //Añadir pagina
+    const addingPage: Element<TabAddPageProps> = extractElements<TabAddPageProps>(children, TabAddPage)?.[0];
     setAddPage(addingPage ?? null);
   }, [children]);
 
@@ -223,8 +221,10 @@ export function Tabs({ children }: TabsProps) {
 
   const selectedPageContent = pages[selectedPageIndex]?.props.children;
 
+  const defaultClassNameContainer = "min-h-[300px] relative overflow-hidden   flex flex-col w-[95%] mx-auto my-2 rounded-xl bg-[#eee] border border-[#0005]"
+  className = createClassName(defaultClassNameContainer,className,disableStyles)
   return (
-    <div className="min-h-[300px] relative overflow-hidden   flex flex-col w-[95%] mx-auto my-2 rounded-xl bg-[#eee] border border-[#0005]">
+    <div  style={style} className={className} >
       {showLeftArrow && (
         <ArrowButton direction="left" onClick={() => handleScroll(-200)} />
       )}
@@ -247,7 +247,7 @@ export function Tabs({ children }: TabsProps) {
       {showRightArrow && (
         <ArrowButton direction="right" onClick={() => handleScroll(200)} />
       )}
-      <div className="p-4 bg-white m-1.5 rounded flex-1 ">
+      <div className="p-4 bg-white m-1.5 max-h-full rounded flex-1 ">
         {selectedPageContent ?? <h1>Sin Paginas</h1>}
       </div>
     </div>
