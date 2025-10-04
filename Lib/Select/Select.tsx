@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import type { Element, Elements, OptionContainerProps, OptionsProps, SelectProps } from '../../Types'
+import type { Element, Elements, OptionContainerProps, OptionsProps, SelectProps } from '../Types'
 import Option from './Option'
 import './Select.css'
-import { extractElements } from '../../Functions'
-import { StyleClass } from '../../Utils/Class/StyleClass'
+import { extractElements } from '../Functions'
+import { StyleClass } from '../Utils/Class/StyleClass'
 import styles from "../../index.module.css";
 
 

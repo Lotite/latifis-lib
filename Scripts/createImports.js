@@ -25,7 +25,7 @@ fs.readdir(libDir, (err, files) => {
 
   componentFolders.forEach(folder => {
     const folderPath = path.join(libDir, folder);
-    const subFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.tsx'));
+    const subFiles = fs.readdirSync(folderPath).filter(file => file.endsWith('.tsx') && !file.endsWith('.stories.tsx'));
     subFiles.forEach(file => {
       const componentName = path.parse(file).name;
       exports.push(`export {${componentName}} from "./${folder}/${componentName}";`);

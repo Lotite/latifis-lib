@@ -1,4 +1,4 @@
-import type { SelectProps } from "../../Types";
+import type { SelectProps } from "../Types";
 import Option from "./Option";
 import { Select } from "./Select";
 export default {

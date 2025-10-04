@@ -1,4 +1,4 @@
-import type { OptionsProps } from "../../Types";
+import type { OptionsProps } from "../Types";
 
 export default function Option<T = object>({ value, disableStyles, selected, ...rest }: OptionsProps<T>) {
 
