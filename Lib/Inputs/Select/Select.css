@@ -1,0 +1,48 @@
+@import url('../../index.module.css');
+
+.select {
+	min-width: 70px;
+	min-height: 30px;
+	width: fit-content;
+	overflow: visible;
+	border-width: 1px;
+	border-radius: 0.25rem;
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+
+	background-color: rgb(255 255 255);
+	box-shadow: 0 3px 5px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+
+	&:hover {
+		border-color: #206edc;
+	}
+
+
+
+	&:focus {
+		border-width: 1.5px;
+		border-color: #166ae0;
+
+		&:hover {
+			border-width: 2px;
+		}
+	}
+
+}
+
+
+.optionContainer {
+	position: absolute;
+	min-width: 100px;
+	overflow-y: auto;
+	height: fit-content;
+	max-height: 200px;
+	background-color: rgb(255 255 255);
+	box-shadow: 0 3px 5px 3px rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+	top: 35px;
+	border-radius: 0.25rem;
+}

@@ -8,7 +8,6 @@ import {
 import { TabPage } from "./TabPage";
 import { createClassName, extractElements } from "../Functions";
 import type { TabsProps, TabPageProps, TabAddPageProps, Element, Elements } from "../Types";
-// @ts-expect-error : Archivo CSS
 import styles from "../index.module.css";
 import { TabAddPage } from "./TabAddPage";
 

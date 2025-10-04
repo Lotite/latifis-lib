@@ -38,6 +38,64 @@ export type CommonProps = BasicStyleProps & {
   icon: Icon;
 };
 
+export type BasicActionsProps<T = HTMLElement> = {
+  onClick?: React.MouseEventHandler<T>;
+  onDoubleClick?: React.MouseEventHandler<T>;
+  onMouseDown?: React.MouseEventHandler<T>;
+  onMouseMove?: React.MouseEventHandler<T>;
+  onMouseUp?: React.MouseEventHandler<T>;
+  onMouseEnter?: React.MouseEventHandler<T>;
+  onMouseLeave?: React.MouseEventHandler<T>;
+  onMouseOver?: React.MouseEventHandler<T>;
+  onMouseOut?: React.MouseEventHandler<T>;
+  onContextMenu?: React.MouseEventHandler<T>;
+
+  onKeyDown?: React.KeyboardEventHandler<T>;
+  onKeyUp?: React.KeyboardEventHandler<T>;
+  onKeyPress?: React.KeyboardEventHandler<T>;
+
+  onChange?: React.ChangeEventHandler<T>;
+  onInput?: React.FormEventHandler<T>;
+
+  onFocus?: React.FocusEventHandler<T>;
+  onBlur?: React.FocusEventHandler<T>;
+
+  onScroll?: React.UIEventHandler<T>;
+  onWheel?: React.WheelEventHandler<T>;
+
+  onDrag?: React.DragEventHandler<T>;
+  onDragEnd?: React.DragEventHandler<T>;
+  onDragEnter?: React.DragEventHandler<T>;
+  onDragExit?: React.DragEventHandler<T>;
+  onDragLeave?: React.DragEventHandler<T>;
+  onDragOver?: React.DragEventHandler<T>;
+  onDragStart?: React.DragEventHandler<T>;
+  onDrop?: React.DragEventHandler<T>;
+
+  onTouchCancel?: React.TouchEventHandler<T>;
+  onTouchEnd?: React.TouchEventHandler<T>;
+  onTouchMove?: React.TouchEventHandler<T>;
+  onTouchStart?: React.TouchEventHandler<T>;
+
+  onPointerDown?: React.PointerEventHandler<T>;
+  onPointerMove?: React.PointerEventHandler<T>;
+  onPointerUp?: React.PointerEventHandler<T>;
+  onPointerCancel?: React.PointerEventHandler<T>;
+  onPointerEnter?: React.PointerEventHandler<T>;
+  onPointerLeave?: React.PointerEventHandler<T>;
+  onPointerOver?: React.PointerEventHandler<T>;
+  onPointerOut?: React.PointerEventHandler<T>;
+  onGotPointerCapture?: React.PointerEventHandler<T>;
+  onLostPointerCapture?: React.PointerEventHandler<T>;
+
+  onAnimationStart?: React.AnimationEventHandler<T>;
+  onAnimationEnd?: React.AnimationEventHandler<T>;
+  onAnimationIteration?: React.AnimationEventHandler<T>;
+
+  onTransitionEnd?: React.TransitionEventHandler<T>;
+};
+
+
 export type Caption = BasicStyleProps & {
   title: Title;
   icon?: Icon;
@@ -83,9 +141,9 @@ export type GridColumnProps<T> = {
   CellDisableStyles?: boolean;
 
   children?:
-    | Children
-    | ((contex: T) => ObjectValuesType<T>)
-    | ((contex: T) => Children);
+  | Children
+  | ((contex: T) => ObjectValuesType<T>)
+  | ((contex: T) => Children);
 
   // DataProps
   dataField?: keyof T;
@@ -127,21 +185,32 @@ export type TabAddPageProps = TabPageProps & {
 
 
 //#region  Inputs Props
-export type InputProps = BasicStyleProps & {
+export type InputProps = BasicActionsProps & BasicStyleProps & {
   defaultValue?: string;
   inputRef?: Ref<HTMLInputElement>;
   onChange?: OnChange<HTMLInputElement>;
   value?: string;
   onlyRead?: boolean;
-  label?:string
+  label?: string
+};
+
+export type SelectProps<T = object> = BasicActionsProps & BasicStyleProps & {
+  onChangeValue?: (value: T) => any;
+  value?: T;
+  children?: ChildrenElements<OptionsProps<T>>;
 };
 
 
-export type InputOptionProps = {
-  value: string | number;
-  label: string;
-  onSelect: (value: string | number) => void;
-  selected?: boolean;
-  children?: Children;
+export type OptionsProps<T = object> = Omit<BasicActionsProps, 'onChange' | 'onInput'> & BasicStyleProps & {
+  value: T
+  children: Children;
+  selected?: boolean
+};
+
+export type OptionContainerProps<T = object> = {
+  isOpen: boolean
+  options: Elements<OptionsProps<T>>
+  selectOption: (newOption: Element<OptionsProps<T>> | null) => void
 }
+
 //#endregion

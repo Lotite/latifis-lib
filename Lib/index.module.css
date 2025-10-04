@@ -1,8 +1,26 @@
 .no-scrollbar {
-  -ms-overflow-style: none; /* Oculta la barra de desplazamiento en IE y Edge */
-  scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }
 
 .no-scrollbar::-webkit-scrollbar {
-  display: none; /* Oculta la barra de desplazamiento en Chrome, Safari y Opera */
+  display: none;
 }
+
+.animateDisplayNone {
+  transition: 
+  max-height 350ms ease-in-out,
+  height 600ms allow-discrete,
+  display 300ms allow-discrete;;
+  height: fit-content;
+  @starting-style {
+    max-height: 0;
+    min-height: 0;
+  }
+
+}
+
+ .hidden {
+   max-height: 0;
+   display: none;
+ }

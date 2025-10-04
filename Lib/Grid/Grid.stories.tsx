@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { Grid } from './Grid';
 import { GridColumn } from './GridColumn';
-import type { GridColumnProps, List } from '../Types'
+import type { List } from '../Types'
 
 
 const meta: Meta<typeof Grid> = {
@@ -20,7 +20,7 @@ interface MyData {
     id: number;
     name: string;
     age: number;
-    city?: string; //
+    city?: string; 
 }
 
 const dataList: List<MyData> = [
@@ -44,8 +44,7 @@ export const GridSimple: Story = {
     parameters: {
         docs: {
             source: {
-                code: `
- <Grid  {...args}>
+                code: `<Grid  {...args}>
             <GridColumn key={1} CaptionTitle='Id' dataField={"id"} />
             <GridColumn key={1} CaptionTitle='Name' dataField={"name"} />
             <GridColumn key={1} CaptionTitle='Age' dataField={"age"} />
