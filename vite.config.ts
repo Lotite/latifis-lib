@@ -15,11 +15,16 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react(), tailwindcss(), dts({
     rollupTypes: false,
-    entryRoot: 'Lib'
+    entryRoot: 'lib'
   })],
+  resolve: {
+    alias: {
+      "@lib": path.resolve(__dirname, "./lib"),
+    },
+  },
   build: {
     lib: {
-      entry: resolve(__dirname, "Lib/index.tsx"),
+      entry: resolve(__dirname, "lib/index.tsx"),
       name: "latifis-lib",
       // the proper extensions will be added
       fileName: "latifis-lib"

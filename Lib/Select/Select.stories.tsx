@@ -1,5 +1,5 @@
 import type { SelectProps } from "../Types";
-import Option from "./Option";
+import { Option } from "./Option";
 import { Select } from "./Select";
 export default {
 	title: 'Components/Select',

@@ -198,6 +198,9 @@ export type SelectProps<T = object> = BasicActionsProps & BasicStyleProps & {
   onChangeValue?: (value: T) => any;
   value?: T;
   children?: ChildrenElements<OptionsProps<T>>;
+  StyleModal?:Style,
+  ClassNameModal?:ClassName
+  disableStylesModal?:boolean
 };
 
 
@@ -207,7 +210,7 @@ export type OptionsProps<T = object> = Omit<BasicActionsProps, 'onChange' | 'onI
   selected?: boolean
 };
 
-export type OptionContainerProps<T = object> = {
+export type OptionContainerProps<T = object> = BasicStyleProps & {
   isOpen: boolean
   options: Elements<OptionsProps<T>>
   selectOption: (newOption: Element<OptionsProps<T>> | null) => void
