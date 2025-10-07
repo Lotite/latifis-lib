@@ -11,7 +11,7 @@ import { createClassName, extractElements } from "../Functions";
 import type { TabsProps, TabPageProps, TabAddPageProps, Element, Elements } from "../Types";
 import styles from "../index.module.css";
 import { TabAddPage } from "./TabAddPage";
-
+import "./Tabs.css"
 //TODO: Añadir la capacidad de dar estilo al componente
 
 const ArrowButton = ({
@@ -47,11 +47,7 @@ const CaptionButton = ({
   return (
     <button
       key={index}
-      className={`px-4 relative py-2 rounded-t-md flex-shrink-0 ${
-        index === selectedPageIndex
-          ? "bg-white font-semibold"
-          : "hover:bg-gray-200"
-      }`}
+      className={`TabCaption ${index === selectedPageIndex ? "selected" : ""}`}
       onClick={() => {
         page.props.onOpen?.();
         onOpen(index);
@@ -65,7 +61,7 @@ const CaptionButton = ({
             page.props.onClose?.();
             onClose(index);
           }}
-          className=" absolute right-0 top-0 m-1 hover:text-red-600 text-xs"
+          className="TabsCloseButton"
         >
           x
         </span>
@@ -109,7 +105,7 @@ const TabHeader = ({
         // Botón para añadir una nueva pestaña si se proporciona un TabAddPage
         addPage && (
           <button
-            className={`px-4 py-2 flex-shrink-0 hover:bg-gray-200`}
+            className={`addPage`}
             onClick={onAddPage}
           >
             {addPage.props.caption ?? "+"}
@@ -221,7 +217,7 @@ export function Tabs({ children , className ,style , disableStyles}: TabsProps) 
 
   const selectedPageContent = pages[selectedPageIndex]?.props.children;
 
-  const defaultClassNameContainer = "min-h-[300px] relative overflow-hidden   flex flex-col w-[95%] mx-auto my-2 rounded-xl bg-[#eee] border border-[#0005]"
+  const defaultClassNameContainer = "TabsContainer"
   className = createClassName(defaultClassNameContainer,className,disableStyles)
   return (
     <div  style={style} className={className} >
@@ -229,10 +225,10 @@ export function Tabs({ children , className ,style , disableStyles}: TabsProps) 
         <ArrowButton direction="left" onClick={() => handleScroll(-200)} />
       )}
 
-      <div className="flex  items-center border-b px-3 mx-1 border-[#0005]">
+      <div className="TabsHeader">
         <div
           ref={tabsContainerRef}
-          className={`flex-grow flex   overflow-x-auto whitespace-nowrap scroll-smooth ${styles["no-scrollbar"]}`}
+          className={`ColumnContainer  ${styles["no-scrollbar"]}`}
         >
           <TabHeader
             pages={pages}
@@ -247,7 +243,7 @@ export function Tabs({ children , className ,style , disableStyles}: TabsProps) 
       {showRightArrow && (
         <ArrowButton direction="right" onClick={() => handleScroll(200)} />
       )}
-      <div className="p-4 bg-white m-1.5 max-h-full rounded flex-1 ">
+      <div className="tabsPageContainer">
         {selectedPageContent ?? <h1>Sin Paginas</h1>}
       </div>
     </div>

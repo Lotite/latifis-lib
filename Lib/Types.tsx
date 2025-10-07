@@ -217,3 +217,9 @@ export type OptionContainerProps<T = object> = BasicStyleProps & {
 }
 
 //#endregion
+
+
+
+//#Region HR Props
+export type THR = BasicStyleProps
+//#endregion

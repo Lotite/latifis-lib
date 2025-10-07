@@ -1,0 +1,5 @@
+.hr {
+	border: none;
+	border-bottom: 1.5px solid #8a89895c; /* Un borde sutil para separar contenido */
+	margin: 20px 0; /* Margen superior e inferior para espaciar */
+}

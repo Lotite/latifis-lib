@@ -44,9 +44,9 @@ export const createClassName = (
   classNameDefault?: ClassName,
   className?: ClassName,
   disableStyles?: boolean
-) => {
+):string => {
   if (disableStyles !== true) {
     return `${classNameDefault} ${className}`;
   }
-  return className;
+  return className || "";
 };

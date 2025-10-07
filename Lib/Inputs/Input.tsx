@@ -8,12 +8,13 @@ export function Input({ defaultValue, onlyRead, style, className, disableStyles 
   const stylesProp = StyleClass.createStylesAndClassName({
     defaultClass: classNameDefault,
     className: className,
-    style: style,
+    style: style || {},
     disableStyles: disableStyles
   });
 
   return <input
-    {...stylesProp}
+    className={stylesProp.className}
+    style={stylesProp.style}
     defaultValue={defaultValue}
     disabled={onlyRead}
   />;
